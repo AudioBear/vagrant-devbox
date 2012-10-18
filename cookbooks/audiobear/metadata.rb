@@ -5,7 +5,7 @@ license "GPLv2"
 
 recipe "audiobear", "Sets up an audiobear development box."
 
-%{ubuntu debian}.each do |os|
+%w{ubuntu debian}.each do |os|
   supports os
 end
 
