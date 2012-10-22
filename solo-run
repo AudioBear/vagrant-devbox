@@ -1,1 +1,3 @@
-sudo chef-solo -c solo.rb -j dna.json
+#!/bin/bash
+
+sudo chef-solo -c "$PWD/solo.rb" -j "$PWD/dna.json"

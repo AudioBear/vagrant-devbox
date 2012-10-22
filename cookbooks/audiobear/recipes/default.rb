@@ -2,7 +2,7 @@ include_recipe "build-essential"
 include_recipe "git"
 include_recipe "redis"
 include_recipe "nginx"
-include_recipe "tup"
+include_recipe "tup::source"
 
 username = node['audiobear']['user']
 userhome ="/home/#{username}"
