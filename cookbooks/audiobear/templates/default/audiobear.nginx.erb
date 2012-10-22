@@ -1,0 +1,67 @@
+server {
+  gzip on;
+
+  listen       80;
+
+  server_name <%=@subdomain%>.audiobear.com
+              <%=@subdomain%>.audiobear.org
+              <%=@subdomain%>.audiobear.net
+              <%=@subdomain%>.audiobear.bg;
+
+ location / {
+    if ($args ~ "_escaped_fragment_") {
+      rewrite ^ /page break;
+      proxy_pass http://<%=@search_srv%>;
+    }
+
+    root   <%=@root%>;
+    index  index.html;
+  }
+
+  location /m {
+    alias  <%=@root%>/m;
+    index index.html;
+  }
+
+  location /samples {
+    alias  <%=@globalroot%>/samples;
+  }
+
+  location /downloads {
+    alias <%=@globalroot%>/downloads;
+  }
+
+  location /search {
+    proxy_pass http://<%=@search_srv%>;
+  }
+
+  location /info {
+    proxy_pass http://<%=@search_srv%>;
+  }
+  
+  location /stream {
+    proxy_pass http://<%=@search_srv%>;
+  }
+
+  location /tinysong {
+    proxy_set_header Host tinysong.com;
+    rewrite ^/tinysong/(.*) /$1 break;
+    proxy_pass http://tinysong.com;
+  }
+
+  location /api {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    # proxy_set_header X-NginX-Proxy true;
+
+    proxy_pass http://<%=@api_srv%>;
+    proxy_redirect off;
+  }	
+
+  location /spritegen {
+    alias <%=@root%>/spritegen;
+    index index.html;
+  }
+}
+
