@@ -1,0 +1,3 @@
+[submodule "cookbooks/tup"]
+	path = cookbooks/tup
+	url = git@github.com:AudioBear/cookbook-tup.git
