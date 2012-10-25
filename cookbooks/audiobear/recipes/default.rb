@@ -3,6 +3,7 @@ include_recipe "git"
 include_recipe "redis"
 include_recipe "nginx"
 include_recipe "tup::source"
+include_recipe "node::apt"
 
 include_recipe "samba::server"
 node.samba.workgroup = "WORKGROUP"
@@ -24,7 +25,8 @@ projects_root = "#{userhome}/Projects"
 
 %w{ python
     python-psycopg2
-    postgresql }.each { |p| package p }
+    postgresql
+    libpq-dev }.each { |p| package p }
 
 directory projects_root do
   action :create
@@ -86,7 +88,7 @@ sites.each do |site, vars|
   nginx_site site
 end
 
-samba_user "musicbrainz" do
+samba_user username do
   password node.audiobear.user_smbpass
   action [:create, :enable]
 end
