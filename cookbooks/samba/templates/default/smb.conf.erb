@@ -5,15 +5,25 @@
 # Local modifications will be overwritten by Chef.
 #
 
+<% 
+def setting name
+  value = node.samba[name]
+  smb_name = name.to_s.gsub('_', ' ')
+  "#{smb_name} = #{value}" unless value.empty?
+end
+-%>
+
 [global]
-  workgroup = <%= node["samba"]["workgroup"] %>
-  server string = <%= node["samba"]["server_string"] %>
-  security = <%= node["samba"]["security"] %>
-  interfaces = <%= node["samba"]["interfaces"] %>
-  hosts allow = <%= node["samba"]["hosts_allow"] %>
-  load printers = <%= node["samba"]["load_printers"] %>
-  passdb backend = <%= node["samba"]["passdb_backend"] %>
-  dns proxy = <%= node["samba"]["dns_proxy"] %>
+<% %w{ workgroup
+       server_string
+       security
+       username_map
+       interfaces
+       hosts_allow
+       load_printers
+       passdb_backend
+     }.each do |key| %>  <%= setting key %>
+<% end %>
 
 #============================ Share Definitions ==============================
 <% @shares.each do |share,option| -%>

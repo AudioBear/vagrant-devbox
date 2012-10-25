@@ -1,0 +1,12 @@
+{
+  "id": "shares",
+  "shares": {
+    "homes": {
+      "comment": "Exported Share",
+      "browsable": "yes",
+      "read only": "no",
+      "valid users": "%S"
+    }
+  }
+}
+

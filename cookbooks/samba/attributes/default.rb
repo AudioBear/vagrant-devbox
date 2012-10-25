@@ -25,6 +25,7 @@ default["samba"]["load_printers"] = "no"
 default["samba"]["passdb_backend"] = "tdbsam"
 default["samba"]["dns_proxy"] = "no"
 default["samba"]["security"] = "user"
+default["samba"]["username_map"] = "/etc/smb/smbusers"
 default["samba"]["map_to_guest"] = "Bad User"
 default["samba"]["socket_options"] = "TCP_NODELAY"
 

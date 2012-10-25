@@ -1,7 +1,0 @@
-{
-    "instance_role":"audiobear_node",
-    "run_list": [
-      "recipe[audiobear]"
-    ]
-}
-

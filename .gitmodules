@@ -1,3 +1,6 @@
 [submodule "cookbooks/tup"]
 	path = cookbooks/tup
 	url = git@github.com:AudioBear/cookbook-tup.git
+[submodule "cookbooks/chef-solo-search"]
+	path = cookbooks/chef-solo-search
+	url = git://github.com/edelight/chef-solo-search.git

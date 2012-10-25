@@ -4,34 +4,47 @@ include_recipe "redis"
 include_recipe "nginx"
 include_recipe "tup::source"
 
+include_recipe "samba::server"
+node.samba.workgroup = "WORKGROUP"
+node.samba.interfaces = ""
+node.samba.hosts_allow = ""
+
 username = node['audiobear']['user']
 userhome ="/home/#{username}"
 www_user = username
 
 user username  do
   comment "AudioBear Developer"
-  uid 2002
   gid "users"
   home userhome 
   shell node['audiobear']['user_shell']
 end
 
-www_files = "#{userhome}/Projects/audiobear-www-releases" 
-www_working_copy = "#{userhome}/Projects/audiobear-www" 
+projects_root = "#{userhome}/Projects"
 
-directory www_files do
+%w{ python
+    python-psycopg2
+    postgresql }.each { |p| package p }
+
+directory projects_root do
   action :create
   user username
   recursive true
 end
 
-git www_files do
-  repo "https://bitbucket.org/zahary/audiobear-www-releases.git"
-  revision "master"
-  action :sync
-  user username
-  enable_submodules true
+%w{audiobear audiobear-www-releases audiobear-api}.each do |project|
+  git "#{projects_root}/#{project}" do
+    repo "git@bitbucket.org:zahary/#{project}.git"
+    revision "master"
+    action :sync
+    user username
+    enable_submodules true   
+  end
 end
+
+www_files = "#{projects_root}/audiobear-www-releases/www"
+www_working_copy = "#{projects_root}/audiobear" 
+api_working_copy = "#{projects_root}/audiobear-api" 
 
 sites = {
   "retail" => {
@@ -45,7 +58,7 @@ sites = {
   "test" => {
     :search_srv => "10.10.10.2:8871",
     :api_srv => "127.0.0.1:8181",
-    :root => www_files,
+    :root => "#{projects_root}/audiobear-www-releases/debug",
     :globalroot => www_files,
     :subdoiman => "test"
   },
@@ -53,7 +66,7 @@ sites = {
   "devel" => {
     :search_srv => "10.10.10.2:26384",
     :api_srv => "127.0.0.1:8181",
-    :root => www_files,
+    :root => www_working_copy,
     :globalroot => www_files,
     :subdoiman => "dev"
   },
@@ -71,5 +84,10 @@ sites.each do |site, vars|
   end
 
   nginx_site site
+end
+
+samba_user "musicbrainz" do
+  password node.audiobear.user_smbpass
+  action [:create, :enable]
 end
 
