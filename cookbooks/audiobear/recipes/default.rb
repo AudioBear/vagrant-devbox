@@ -5,6 +5,9 @@ include_recipe "nginx"
 include_recipe "tup::source"
 include_recipe "node::apt"
 
+include_recipe "mongodb::10gen_repo"
+include_recipe "mongodb::default"
+
 include_recipe "samba::server"
 node.samba.workgroup = "WORKGROUP"
 node.samba.interfaces = ""
@@ -44,7 +47,7 @@ end
   end
 end
 
-www_files = "#{projects_root}/audiobear-www-releases/www"
+www_files = "#{projects_root}/audiobear-www-releases/www/retail"
 www_working_copy = "#{projects_root}/audiobear" 
 api_working_copy = "#{projects_root}/audiobear-api" 
 
@@ -60,9 +63,17 @@ sites = {
   "test" => {
     :search_srv => "10.10.10.2:8871",
     :api_srv => "127.0.0.1:8181",
-    :root => "#{projects_root}/audiobear-www-releases/debug",
+    :root => "#{projects_root}/audiobear-www-releases/www/debug",
     :globalroot => www_files,
     :subdomain => "test"
+  },
+
+  "local" => {
+    :search_srv => "audiobear.com",
+    :api_srv => "127.0.0.1:8181",
+    :root => www_working_copy,
+    :globalroot => www_files,
+    :subdomain => "local"
   },
 
   "devel" => {

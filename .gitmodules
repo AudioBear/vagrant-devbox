@@ -7,3 +7,6 @@
 [submodule "cookbooks\\node"]
 	path = cookbooks\\node
 	url = https://github.com/AudioBear/cookbook-node.git
+[submodule "cookbooks/mongodb"]
+	path = cookbooks/mongodb
+	url = git://github.com/edelight/chef-mongodb.git
