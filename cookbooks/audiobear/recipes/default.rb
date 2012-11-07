@@ -54,7 +54,7 @@ sites = {
     :api_srv => "127.0.0.1:5000",
     :root => www_files,
     :globalroot => www_files,
-    :subdoiman => ""
+    :subdomain => ""
   },
 
   "test" => {
@@ -62,7 +62,7 @@ sites = {
     :api_srv => "127.0.0.1:8181",
     :root => "#{projects_root}/audiobear-www-releases/debug",
     :globalroot => www_files,
-    :subdoiman => "test"
+    :subdomain => "test"
   },
 
   "devel" => {
@@ -70,7 +70,7 @@ sites = {
     :api_srv => "127.0.0.1:8181",
     :root => www_working_copy,
     :globalroot => www_files,
-    :subdoiman => "dev"
+    :subdomain => "dev"
   },
 }
 
