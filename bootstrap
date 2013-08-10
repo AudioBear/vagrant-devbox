@@ -1,0 +1,6 @@
+#!/bin/bash
+
+hash bundle || sudo gem install bundler
+bundle install
+ruby bootstrap.rb
+

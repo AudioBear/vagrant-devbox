@@ -4,9 +4,12 @@
 [submodule "cookbooks/chef-solo-search"]
 	path = cookbooks/chef-solo-search
 	url = git://github.com/edelight/chef-solo-search.git
-[submodule "cookbooks\\node"]
-	path = cookbooks\\node
-	url = https://github.com/AudioBear/cookbook-node.git
+[submodule "cookbooks/node"]
+  path = cookbooks/node
+	url = git@github.com:AudioBear/cookbook-node.git
 [submodule "cookbooks/mongodb"]
 	path = cookbooks/mongodb
 	url = git://github.com/edelight/chef-mongodb.git
+[submodule "cookbooks/devbox"]
+	path = cookbooks/devbox
+	url = git@github.com:Darkium/cookbook-devbox

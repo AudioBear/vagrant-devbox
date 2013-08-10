@@ -1,0 +1,9 @@
+{
+  "audiobear": {
+    "user_smbpass": "audiobear"
+  },
+
+  "run_list": [
+    "recipe[audiobear]"
+  ]
+}

@@ -1,9 +1,10 @@
+include_recipe "apt"
 include_recipe "build-essential"
 include_recipe "git"
 include_recipe "redis"
 include_recipe "nginx"
 include_recipe "tup::source"
-include_recipe "node::apt"
+include_recipe "devbox"
 
 include_recipe "mongodb::10gen_repo"
 include_recipe "mongodb::default"
@@ -13,7 +14,7 @@ node.samba.workgroup = "WORKGROUP"
 node.samba.interfaces = ""
 node.samba.hosts_allow = ""
 
-username = node['audiobear']['user']
+username = node.devbox.username
 userhome ="/home/#{username}"
 www_user = username
 
@@ -26,7 +27,8 @@ end
 
 projects_root = "#{userhome}/Projects"
 
-%w{ python
+%w{ nodejs npm
+    python
     python-psycopg2
     postgresql
     libpq-dev }.each { |p| package p }
@@ -41,9 +43,10 @@ end
   git "#{projects_root}/#{project}" do
     repo "git@bitbucket.org:zahary/#{project}.git"
     revision "master"
-    action :sync
+    action :checkout
     user username
-    enable_submodules true   
+    enable_submodules true
+    ssh_wrapper "#{$userhome}/.ssh/git_ssh_wrapper"
   end
 end
 
