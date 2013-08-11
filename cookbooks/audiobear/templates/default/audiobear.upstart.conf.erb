@@ -1,0 +1,21 @@
+#!upstart
+
+description "audiobear"
+author "AudioBear Contributors"
+
+start on (local-filesystems and net-device-up IFACE=eth0)
+stop on shutdown
+
+respawn # restart when job dies
+respawn limit 5 60 # give up restart after 5 respawns in 60 seconds
+
+pre-start script
+  mkdir -p /var/log/audiobear
+end script
+
+script
+  WORKING_DIR=<%=@dir%>
+  cd $WORKING_DIR
+  # env AUDIOBEAR_API_PORT=<%=@port%>
+  sudo -u <%=@user%> AUDIOBEAR_API_PORT=<%=@port%> /usr/local/bin/node $WORKING_DIR/express.js >> /var/log/audiobear.log 2>&1
+end script

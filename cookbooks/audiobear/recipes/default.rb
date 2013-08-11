@@ -4,22 +4,18 @@ include_recipe "git"
 include_recipe "redis"
 include_recipe "nginx"
 include_recipe "tup::source"
+include_recipe "node::source"
 include_recipe "devbox"
 
 include_recipe "mongodb::10gen_repo"
 include_recipe "mongodb::default"
-
-include_recipe "samba::server"
-node.samba.workgroup = "WORKGROUP"
-node.samba.interfaces = ""
-node.samba.hosts_allow = ""
 
 username = node.devbox.username
 userhome ="/home/#{username}"
 www_user = username
 
 user username  do
-  comment "AudioBear Developer"
+  comment username
   gid "users"
   home userhome 
   shell node['audiobear']['user_shell']
@@ -27,7 +23,7 @@ end
 
 projects_root = "#{userhome}/Projects"
 
-%w{ nodejs npm
+%w{ curl
     python
     python-psycopg2
     postgresql
@@ -86,6 +82,14 @@ sites = {
     :globalroot => www_files,
     :subdomain => "dev"
   },
+
+  "devbox" => {
+    :search_srv => "audiobear.com",
+    :api_srv => "127.0.0.1:8181",
+    :root => www_working_copy,
+    :globalroot => www_files,
+    :subdomain => "devbox"
+  },
 }
 
 sites.each do |site, vars|
@@ -102,8 +106,26 @@ sites.each do |site, vars|
   nginx_site site
 end
 
-samba_user username do
-  password node.audiobear.user_smbpass
-  action [:create, :enable]
+template "/etc/init/audiobear.conf" do
+  action :create
+  owner username
+  mode "755"
+  source "audiobear.upstart.conf.erb"
+  variables(
+    :user => username,
+    :dir => api_working_copy,
+    :port => 5000)
+end
+
+if $devbox
+  include_recipe "samba::server"
+  node.samba.workgroup = "WORKGROUP"
+  node.samba.interfaces = ""
+  node.samba.hosts_allow = ""
+
+  samba_user username do
+    password node.audiobear.user_smbpass
+    action [:create, :enable]
+  end
 end
 
